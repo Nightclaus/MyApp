@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pygame Folder Upload</title>
+</head>
+<body>
+    <h2>Upload Your Pygame Folder</h2>
+    <input type="file" id="folderInput" webkitdirectory directory multiple>
+    <button onclick="uploadFolder()">Upload Folder</button>
+    
+    <p id="status"></p>
+
+    <script>
+        async function uploadFolder() {
+            let folderInput = document.getElementById('folderInput');
+            let files = folderInput.files;
+
+            if (files.length === 0) {
+                alert("Please select a folder first!");
+                return;
+            }
+
+            let formData = new FormData();
+
+            // Add all files from the folder to FormData
+            for (let i = 0; i < files.length; i++) {
+                formData.append("files[]", files[i]);
+            }
+
+            let response = await fetch('/upload_folder', {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+            document.getElementById('status').innerText = result.message;
+        }
+    </script>
+</body>
+</html>
