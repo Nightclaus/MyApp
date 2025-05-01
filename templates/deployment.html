@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyNak - Deployment</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/projects.css"> <!-- Reuse or create projects.css -->
+    <link rel="stylesheet" href="/projects.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header (same) -->
+        <header class="repo-header">
+            <i class="fas fa-bars header-icon"></i>
+            <div style="width: 5px;"></div> 
+            <i class="fas fa-globe"></i>
+            <span class="repo-name">
+                <a href="{{ url_for('home') }}">PyNak Home / </a><a href="{{ url_for('projects_page') }}">Account / </a><strong>Deploy</strong>
+            </span>
+            <div class="header-right">
+                <input type="search" placeholder="Type / to search" class="search-input">
+                <a href="{{ url_for('deploy_page') }}"><i class="fas fa-plus header-icon"></i></a>
+                <a href="{{ url_for('projects_page') }}"><i class="fas fa-inbox header-icon"></i></a>
+                <a href="{{ url_for('setting_page') }}"><i class="fas fa-cog header-icon"></i></a>
+                <!-- <img src="data:image/png;base64,..." alt="User Avatar" class="avatar small-avatar header-avatar"> Truncated base64 -->
+                <i class="fab fa-github header-icon github-logo"></i> <!-- temp avatar-->
+            </div>
+        </header>
+
+        <!-- Tabs (same) -->
+        <nav class="repo-nav project-nav">
+            <ul>
+                <li class="active"><i class="fas fa-rocket"></i>Deploy</li> 
+                <li><a href="{{ url_for('projects_page') }}"><i class="fas fa-list-alt"></i>My PyGames</a></li> <!-- Link back to deploy -->
+                <li><a href="{{ url_for('setting_page') }}"><i class="fas fa-cog"></i>Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="{{ url_for('projects_page') }}">my-pygame</a> /
+            </div>
+
+            <!-- Upload Zone (remains mostly the same, but file list is moved out) -->
+            <div class="upload-zone" id="uploadZone">
+                <div id="uploadPrompt">
+                    <i class="fas fa-file-alt upload-icon"></i>
+                    <h2>Drag additional files here to add them to your repository</h2>
+                    <p>Or <label for="folderInput" class="choose-files-link">choose your files</label></p>
+                    <!-- NEW: Scanning indicator -->
+                    <p id="scanningIndicator" style="display: none; margin-top: 10px; font-style: italic; color: #8b949e;">
+                        <i class="fas fa-spinner fa-spin"></i> Scanning folder contents...
+                    </p>
+                </div>
+                <input type="file" id="folderInput" webkitdirectory directory multiple style="display: none;">
+            </div>
+
+            <!-- File Preview and Upload Status Area (NEW) -->
+            <div id="filePreviewArea" style="display: none;"> <!-- Hidden initially -->
+                <!-- Area for currently uploading file + progress -->
+                <div id="currentUploadStatus">
+                    <!-- Content injected by JS -->
+                </div>
+                <!-- List of selected/queued files -->
+                <ul id="fileListContainer">
+                    <!-- File list items injected by JS -->
+                </ul>
+            </div>
+
+
+            <!-- Commit Changes Section (same) -->
+            <div class="commit-section">
+                <i class="fab fa-github header-icon github-logo"></i> <!-- <img src="data:image/png;base64,..." alt="User Avatar" class="avatar commit-avatar"> Truncated base64 -->
+                 <div class="commit-form">
+                     <h3>Deploy WebAssemble</h3>
+                     <input type="text" id="commitTitle" placeholder="Add files via upload" class="commit-input">
+                     <textarea id="commitDescription" placeholder="Add an optional extended description..." class="commit-textarea"></textarea>
+                     <div class="commit-actions">
+                         <button id="commitButton" class="btn btn-primary">Deploy WebAssemble</button>
+                         <a href="{{ url_for('projects_page') }}" class="btn btn-secondary">Cancel</a>
+                     </div>
+                      <!-- Status message moved here, used for final result -->
+                      <p id="status" class="status-message"></p>
+                 </div>
+             </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="page-footer">
+            <span>© 2025 PyNak</span>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="#">Security</a>
+            <a href="#">Status</a>
+            <a href="#">Docs</a>
+            <a href="#">Contact</a>
+            <a href="#">Manage cookies</a>
+            <a href="#">Do not share my personal information</a>
+        </footer>
+    </div>
+
+    <!-- Modified JavaScript -->
+    <script>
+        // Get DOM elements (same as before)
+        const folderInput = document.getElementById('folderInput');
+        const uploadZone = document.getElementById('uploadZone');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const scanningIndicator = document.getElementById('scanningIndicator'); // Get indicator
+        const filePreviewArea = document.getElementById('filePreviewArea');
+        const currentUploadStatus = document.getElementById('currentUploadStatus');
+        const fileListContainer = document.getElementById('fileListContainer');
+        const commitButton = document.getElementById('commitButton');
+        // ... other elements ...
+        const statusElement = document.getElementById('status');
+
+        let selectedFiles = []; // Array to hold the final list of File objects
+
+        // --- Central function to handle the FINAL list of files ---
+        // (Called after input selection OR after folder scanning is complete)
+        function handleFiles(fileList) {
+            // Convert FileList or array to a new array
+            selectedFiles = Array.from(fileList);
+            console.log("Final files count:", selectedFiles.length);
+            displaySelectedFiles(); // Update the UI
+            // Hide scanning indicator if it was shown
+            scanningIndicator.style.display = 'none';
+        }
+
+        // --- Display selected files (mostly unchanged, reads `selectedFiles`) ---
+        function displaySelectedFiles() {
+            currentUploadStatus.innerHTML = '';
+            fileListContainer.innerHTML = '';
+            statusElement.innerText = '';
+
+            if (selectedFiles.length > 0) {
+                filePreviewArea.style.display = 'block';
+                selectedFiles.forEach((file, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.setAttribute('data-index', index);
+
+                    // Use webkitRelativePath if available, otherwise name
+                    const filePath = file.webkitRelativePath || file.name;
+                    // Check if path already starts with /, add if not (for consistency)
+                    const displayPath = filePath.startsWith('/') ? filePath : '/' + filePath;
+
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-file-alt file-icon';
+                    const fileNameSpan = document.createElement('span');
+                    fileNameSpan.textContent = displayPath; // Use modified path
+                    fileNameSpan.title = displayPath;
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-file-btn';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.title = 'Remove file';
+                    removeBtn.onclick = () => removeFile(file, listItem); // Pass file object
+
+                    listItem.appendChild(icon);
+                    listItem.appendChild(fileNameSpan);
+                    listItem.appendChild(removeBtn);
+                    fileListContainer.appendChild(listItem);
+                });
+            } else {
+                filePreviewArea.style.display = 'none';
+            }
+        }
+
+        // --- Remove file function (unchanged) ---
+        function removeFile(fileToRemove, listItemElement) {
+             selectedFiles = selectedFiles.filter(file => file !== fileToRemove);
+             listItemElement.remove();
+             // Re-index remaining items (important if using index elsewhere)
+             const remainingItems = fileListContainer.querySelectorAll('li');
+             remainingItems.forEach((item, newIndex) => {
+                 item.setAttribute('data-index', newIndex);
+                  const removeBtn = item.querySelector('.remove-file-btn');
+                  if (removeBtn) {
+                      const fileInArray = selectedFiles[newIndex];
+                      if (fileInArray) {
+                          removeBtn.onclick = () => removeFile(fileInArray, item);
+                      }
+                  }
+             });
+
+             if (selectedFiles.length === 0) { filePreviewArea.style.display = 'none'; }
+             console.log("Remaining files:", selectedFiles.map(f => f.name));
+        }
+
+        // --- Event Listeners ---
+
+        // 1. File Input Listener (uses handleFiles directly)
+        folderInput.addEventListener('change', () => {
+             if(folderInput.files.length > 0) {
+                 handleFiles(folderInput.files); // input provides the full list via webkitdirectory
+             }
+         });
+
+        // 2. Commit Button Listener (Unchanged)
+        commitButton.addEventListener('click', uploadFolder);
+
+        // 3. Drag and Drop Listeners (Drop handler is now async)
+        uploadZone.addEventListener('dragenter', (e) => { e.preventDefault(); e.stopPropagation(); uploadZone.classList.add('dragover'); });
+        uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); uploadZone.classList.add('dragover'); });
+        uploadZone.addEventListener('dragleave', (e) => {
+            e.preventDefault(); e.stopPropagation();
+             // Simpler check: if mouse leaves the zone, remove class
+             if (!uploadZone.contains(e.relatedTarget)) {
+                uploadZone.classList.remove('dragover');
+                scanningIndicator.style.display = 'none'; // Hide indicator if drag leaves
+             }
+        });
+
+        // MODIFIED DROP HANDLER
+        uploadZone.addEventListener('drop', async (e) => { // Make handler async
+            e.preventDefault();
+            e.stopPropagation();
+            uploadZone.classList.remove('dragover');
+            scanningIndicator.style.display = 'block'; // Show scanning indicator
+
+            const items = e.dataTransfer.items;
+            const filesToProcess = []; // Array to hold discovered File objects
+
+            if (items) {
+                const promises = [];
+                for (let i = 0; i < items.length; i++) {
+                    // *** IMPORTANT: Use webkitGetAsEntry to handle dropped folders ***
+                    const entry = items[i].webkitGetAsEntry();
+                    if (entry) {
+                        promises.push(scanFileSystemEntry(entry, entry.name, filesToProcess));
+                    }
+                }
+
+                try {
+                    // Wait for all asynchronous scanning to complete
+                    await Promise.all(promises);
+                    // Now 'filesToProcess' contains all the files
+                    handleFiles(filesToProcess); // Update UI with discovered files
+                } catch (error) {
+                    console.error("Error scanning dropped items:", error);
+                    statusElement.innerText = "Error scanning folder contents.";
+                    statusElement.style.color = '#f9826c';
+                    scanningIndicator.style.display = 'none'; // Hide indicator on error
+                    handleFiles([]); // Clear any partial list
+                }
+
+            } else {
+                // Fallback for browsers that don't support .items or .webkitGetAsEntry
+                // This will only handle files, not folders dropped
+                handleFiles(e.dataTransfer.files);
+            }
+        });
+
+        // --- NEW: Helper function to recursively scan entries ---
+        async function scanFileSystemEntry(entry, currentPath, filesArray) {
+            if (!entry) return;
+
+            if (entry.isFile) {
+                return new Promise((resolve, reject) => {
+                    entry.file(
+                        (file) => {
+                            // Attempt to assign webkitRelativePath manually based on scan path
+                            // Note: This might not perfectly match browser behavior but is often sufficient
+                            try {
+                                Object.defineProperty(file, 'webkitRelativePath', {
+                                    value: currentPath,
+                                    writable: false
+                                });
+                            } catch (e) { /* Might fail if property is non-configurable */ }
+
+                            filesArray.push(file);
+                            resolve();
+                        },
+                        (err) => {
+                            console.error("Could not get file:", err);
+                            reject(err);
+                        }
+                    );
+                });
+            } else if (entry.isDirectory) {
+                const dirReader = entry.createReader();
+                return new Promise((resolve, reject) => {
+                    const readEntries = async () => {
+                        try {
+                            const entries = await new Promise((res, rej) => dirReader.readEntries(res, rej));
+                            if (entries.length === 0) {
+                                resolve(); // Finished reading this directory
+                                return;
+                            }
+                            // Process these entries recursively
+                            const promises = entries.map(subEntry =>
+                                scanFileSystemEntry(subEntry, `${currentPath}/${subEntry.name}`, filesArray)
+                            );
+                            await Promise.all(promises);
+                            // Read the next batch if any
+                            await readEntries();
+                        } catch (err) {
+                             console.error("Could not read directory entries:", err);
+                             reject(err);
+                        }
+                    };
+                    readEntries(); // Start reading
+                });
+            }
+        }
+
+
+        // --- uploadFolder function (Unchanged - already uses `selectedFiles` array) ---
+        document.getElementById('commitButton').addEventListener('click', uploadFolder);
+
+        async function uploadFolder() {
+            let folderInput = document.getElementById('folderInput');
+            let commitTitleInput = document.getElementById('commitTitle');
+            let commitDescriptionInput = document.getElementById('commitDescription');
+            let statusElement = document.getElementById('status');
+
+            let files = selectedFiles;
+
+            if (files.length === 0) {
+                statusElement.innerText = "Please select a folder first using the 'choose your files' link.";
+                statusElement.style.color = '#f9826c'; // Error color
+                return;
+            }
+
+            // Basic check for commit title (often required)
+            if (!commitTitleInput.value.trim()) {
+                 statusElement.innerText = "Please enter a deployment message title.";
+                 statusElement.style.color = '#f9826c'; // Error color
+                 commitTitleInput.focus();
+                 return;
+            }
+
+            let formData = new FormData();
+
+            // Add all files from the folder to FormData
+            for (let i = 0; i < files.length; i++) {
+                 // The key "files[]" matches the original script.
+                 // Adjust if your backend expects file path information or a different key.
+                formData.append("files[]", files[i], files[i].webkitRelativePath || files[i].name);
+            }
+
+            // Optionally add commit message details if backend expects them
+            // Adjust keys ("commit_message", "commit_description") as needed for your backend
+            formData.append("commit_message", commitTitleInput.value.trim());
+            formData.append("commit_description", commitDescriptionInput.value.trim());
+
+            statusElement.innerText = "Uploading...";
+            statusElement.style.color = '#c9d1d9'; // Reset to default text color
+
+            try {
+                let response = await fetch('/upload_folder', { // Using the same endpoint as original script
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    // Handle HTTP errors
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                let result = await response.json();
+                statusElement.innerText = result.message;
+                 // You might want different colors based on success/failure messages from backend
+                 statusElement.style.color = response.ok ? '#3fb950' : '#f9826c'; // Green for success, Red for error
+
+            } catch (error) {
+                 console.error("Upload failed:", error);
+                 statusElement.innerText = `Upload failed: ${error.message}`;
+                 statusElement.style.color = '#f9826c'; // Error color
+            }
+        }
+    </script>
+
+</body>
+</html>

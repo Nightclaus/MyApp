@@ -1,0 +1,166 @@
+/* --- Projects Page Specific Styles --- */
+
+/* Grid Container */
+.projects-grid {
+    display: grid;
+    /* Responsive columns: Fill available space, min 280px, max 1fr */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px; /* Space between cards */
+    padding-top: 16px; /* Space below nav */
+}
+
+/* General Project Card Styling */
+.project-card {
+    background-color: #161b22; /* Card background */
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Space between elements inside the card */
+    color: #8b949e; /* Default text color inside card */
+    font-size: 13px;
+    min-height: 350px; /* Give cards a decent height */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease, transform 0.2s ease; /* Added transform transition */
+}
+
+.reveal-button {
+    opacity: 0;
+    pointer-events: none; /* Prevent click when hidden */
+    transition: opacity 0.3s ease;
+    position: absolute;
+    top: 30%; /* Center */
+    left: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: #11161d;
+    border-color: transparent;
+
+    width: 80px;
+    height: 80px;
+    transform: translate(-40px, -40px); /* Half of height and width*/
+}
+
+.reveal-button:hover {
+    border-color: #30363d;
+}
+
+.project-settings-icon {
+    font-size: 48px;  /* Font Awesome icons scale with font-size */
+    color: #8b949e; /* Icon color */
+}
+
+.project-card:hover {
+    border-color: #58a6ff; /* Highlight border on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.project-card:hover .reveal-button{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+
+/* Card Header */
+.card-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: #58a6ff; /* Link-like color for repo name */
+    word-break: break-all; /* Prevent long names overflowing badly */
+}
+.card-header .deployment-name {
+    color: #c9d1d9; /* Main text color for deployment name */
+    font-weight: normal;
+}
+
+/* Card Image Upload Area */
+.card-image-upload {
+    border: 1px dashed #30363d;
+    border-radius: 4px;
+    max-height: 150px;
+    padding: 25px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #0d1117; /* Slightly darker background */
+    flex-grow: 1; /* Allow this area to take up space */
+    min-height: 80px; /* Ensure it has some height */
+    cursor: pointer; /* Indicate it's clickable */
+    transition: background-color 0.2s ease;
+}
+.card-image-upload:hover {
+    background-color: #11161d;
+}
+.card-image-upload i {
+    font-size: 24px;
+    color: #8b949e;
+}
+.card-image-upload span {
+    font-size: 12px;
+    color: #8b949e;
+}
+
+/* Card Description */
+.card-description {
+    line-height: 1.4;
+    color: #c9d1d9; /* Slightly brighter than default card text */
+    /* Limit description lines visually if needed */
+    /* display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; */
+}
+
+/* Card Run Link */
+.card-run-link {
+    margin-top: auto; /* Push to bottom */
+    padding-top: 8px; /* Space above */
+    font-size: 12px;
+    border-top: 1px solid #21262d; /* Separator */
+    word-break: break-all; /* Handle long links */
+}
+.card-run-link a {
+    color: #58a6ff;
+    font-weight: 500;
+}
+.card-run-link a:hover {
+    text-decoration: underline;
+}
+
+
+/* "Add New" Card Specific Styles */
+.project-card.add-new {
+    border-style: dashed;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    text-align: center;
+    cursor: pointer;
+    color: #8b949e;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.project-card.add-new:hover {
+    background-color: #1f242c; /* Slightly lighter on hover */
+    border-color: #58a6ff;
+    color: #c9d1d9;
+    transform: translateY(-2px); /* Match hover effect */
+
+}
+.project-card.add-new i {
+    font-size: 32px; /* Larger icon */
+    margin-bottom: 12px;
+}
+.project-card.add-new p {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* --- End Projects Page Specific Styles --- */

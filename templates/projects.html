@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyNak - My Projects</title>
+    <link rel="stylesheet" href="../static/projects.css"> <!-- Reuse or create projects.css -->
+    <link rel="stylesheet" href="../static/style.css"> <!-- Reuse or create projects.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header - Adapted from previous -->
+        <header class="repo-header">
+            <i class="fas fa-bars header-icon"></i>
+            <div style="width: 5px;"></div> 
+            <i class="fas fa-globe"></i>
+            <span class="repo-name">
+                <a href="{{ url_for('home') }}">PyNak Home / </a><strong>Account</strong>
+            </span>
+            <div class="header-right">
+                <input type="search" placeholder="Type / to search" class="search-input">
+                <a href="{{ url_for('deploy_page') }}"><i class="fas fa-plus header-icon"></i></a>
+                <a href="{{ url_for('projects_page') }}"><i class="fas fa-inbox header-icon"></i></a>
+                <a href="{{ url_for('setting_page') }}"><i class="fas fa-cog header-icon"></i></a>
+                 <!-- Placeholder Avatar -->
+                 <!-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEASURBVFhH7ZFBSwMxEEVvg6hFBG/iA+hVFN+ifuBDiN4VEQSxICIiKFjqWaurdpLNNmfYdDbZECqsJ/szyT6T7CZLgNVo8F9Q41/gHjlHjWOAQyB8+7tX44JxE/ACuAPeGeAxAZ4C7gEvi8EZ8I4BL2cfAR4ADgCv9WD8IbgDngBfATa7AL5WgwfAZ4AN4Bcw8LoAjy3gfAM+A/8Am/kAXtODe+Bj4CfwBvgF3AIfge+A6eED+BA4Abw7gA/AaeAZ0K4Fj/VglgDfAPuAuODBGfCGCFyfAXfAUWCtFnywAg9NwI8A/2XAfa8Fz/WgmQBPAG8DXgG/AacBWkvAr+UPG/+qQWOjAAAAAElFTkSuQmCC" alt="User Avatar" class="avatar small-avatar header-avatar"> -->
+                 <i class="fab fa-github header-icon github-logo"></i> <!-- temp avatar-->
+            </div>
+        </header>
+
+        <!-- Navigation Tabs - Adapted for Projects page -->
+        <nav class="repo-nav project-nav"> <!-- Add class for specific styling if needed -->
+            <ul>
+                <!-- Use appropriate icons -->
+                <li><a href="{{ url_for('deploy_page') }}"><i class="fas fa-rocket"></i> Deploy</a></li> <!-- Link back to deploy -->
+                <li class="active"><i class="fas fa-list-alt"></i>My PyGames</li> <!-- Project icon, active -->
+                <li><a href="{{ url_for('setting_page') }}"><i class="fas fa-cog"></i>Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Grid for Project Cards -->
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Project cards will be dynamically inserted here by JS -->
+                <!-- Static example of structure (will be replaced by JS) -->
+                <!--
+                <div class="project-card">
+                    <div class="card-header">
+                        <span class="project-repo">my-pygame /</span>
+                        <span class="deployment-name">[Deployment Name]</span>
+                    </div>
+                    <div class="card-image-upload">
+                        <i class="fas fa-image"></i>
+                        <span>Upload Image +</span>
+                    </div>
+                    <div class="card-description">
+                        [Deployment Description ? desc : defaults to “No Description.”]
+                    </div>
+                    <div class="card-run-link">
+                        Run at | <a href="#">[Deployment Link (clickable)]</a>
+                    </div>
+                </div>
+                <div class="project-card add-new" id="addNewProjectBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    <li><a href="{{ url_for('deploy_page') }}"><i class="fas fa-rocket"></i>Deploy New Project</a></li>
+
+                    <p>Deploy New Project</p>
+                </div>
+                -->
+            </div>
+        </main>
+
+        <!-- Footer (Reuse from index.html) -->
+        <footer class="page-footer">
+            <span>© 2025 PyNak</span>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="#">Security</a>
+            <a href="#">Status</a>
+            <a href="#">Docs</a>
+            <a href="#">Contact</a>
+            <a href="#">Manage cookies</a>
+            <a href="#">Do not share my personal information</a>
+        </footer>
+    </div>
+
+    <script>
+        // --- Test Data ---
+        const testProjectData = [
+            {
+                repo: "my-pygame",
+                deploymentName: "Snake Game v1.2",
+                description: "Classic snake game implementation using Pygame compiled to WASM.",
+                imageUrl: null, // Placeholder for image upload feature
+                runLink: "https://example.com/run/snake-v1.2"
+            },
+            {
+                repo: "web-utils",
+                deploymentName: "Image Resizer",
+                description: "A simple utility to resize images directly in the browser.",
+                imageUrl: null,
+                runLink: "https://example.com/run/resizer"
+            },
+            {
+                repo: "my-pygame",
+                deploymentName: "Platformer Demo",
+                description: "Work in progress platformer game engine.",
+                imageUrl: null,
+                runLink: "https://example.com/run/platformer-dev"
+            }
+        ];
+
+        // --- DOM Elements ---
+        const projectsGrid = document.getElementById('projectsGrid');
+
+        // --- Render Function ---
+        function renderProjects(projects) {
+            projectsGrid.innerHTML = ''; // Clear existing grid content
+
+            // Generate project cards from data
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.classList.add('project-card');
+
+                const runLinkHtml = project.runLink ? `<a href="${project.runLink}" target="_blank">${project.runLink.replace('https://','')}</a>` : 'Not Deployed';
+
+                card.innerHTML = `
+                    <button class="reveal-button">
+                        <i class="fas fa-cog project-settings-icon"></i>
+                    </button>
+                    <div class="card-header">
+                        <span class="project-repo">${project.repo} /</span>
+                        <span class="deployment-name">${project.deploymentName || '[No Name]'}</span>
+                    </div>
+                    <div class="card-image-upload">
+                        <i class="fas fa-image"></i> <!-- Placeholder icon -->
+                        <span>Upload Image +</span>
+                    </div>
+                    <div class="card-description">
+                        ${project.description || 'No Description.'}
+                    </div>
+                    <div class="card-run-link">
+                        Run at | ${runLinkHtml}
+                    </div>
+                `;
+                projectsGrid.appendChild(card);
+            });
+
+            // Add the "Deploy New Project" card
+            const addCard = document.createElement('div');
+            addCard.classList.add('project-card', 'add-new');
+            addCard.id = 'addNewProjectBtn'; // Add ID for click listener
+            addCard.innerHTML = `
+                <i class="fas fa-plus-circle"></i> <!-- Use plus icon -->
+                <p>Deploy New Project</p>
+            `;
+            projectsGrid.appendChild(addCard);
+
+            // Add event listener AFTER the element is created
+            const addNewButton = document.getElementById('addNewProjectBtn');
+            if (addNewButton) {
+                addNewButton.addEventListener('click', () => {
+                    console.log("Add New Project card clicked - Simulating switch to Deploy screen.");
+                    // In a real scenario, you would navigate:
+                    window.location.href = "{{ url_for('deploy_page') }}"; // Or use a router
+                });
+            }
+        }
+
+        // --- Initial Render ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProjects(testProjectData);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,518 @@
+/* Basic Reset & Dark Theme */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.fa-globe {
+    font-size: 20px; /* Adjust size as needed */
+}
+
+a {
+    color: #58a6ff; /* GitHub link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1280px; /* Max width similar to GitHub */
+    margin: 0 auto;
+    padding: 0 24px; /* Side padding */
+}
+
+
+/* Simplified Header */
+.repo-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #21262d; /* GitHub border color */
+    gap: 8px; /* Spacing between items */
+    color: #c9d1d9;
+}
+
+.header-icon {
+    font-size: 18px;
+    color: #8b949e; /* Icon color */
+}
+.github-logo {
+    font-size: 28px;
+    color: #e6edf3; /* Lighter color for logo */
+}
+
+.repo-name {
+    font-size: 20px;
+    color: #58a6ff; /* Link color for user */
+}
+.repo-name strong {
+    font-weight: 600;
+    color: #e6edf3; /* Lighter color for repo */
+}
+
+.header-right {
+    margin-left: auto; /* Pushes icons to the right */
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-input {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 5px 12px;
+    color: #c9d1d9;
+    font-size: 14px;
+    width: 280px; /* Adjust width as needed */
+}
+.search-input:focus {
+    outline: none;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+}
+
+.search-box ul {
+    list-style-type: none;
+    padding: 0;
+    position: absolute; /* Position the list absolutely */
+    transform: translateY(-14px);
+    top: 100%; /* Place it right below the search bar */
+    left: 0;
+    width: 99%;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for better visibility */
+    z-index: 9999; /* Ensure the list is above all other elements */
+    display: none; /* Initially hidden */
+}
+
+.search-box li {
+    padding: 8px;
+    border-bottom: 1px solid #161b22;
+    cursor: pointer; /* Make it clear that the list is interactive */
+}
+
+.search-box li:hover {
+    background-color: #161b22; /* Highlight item on hover */
+}
+
+.avatar {
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.small-avatar {
+     width: 28px;
+     height: 28px;
+     border: 1px solid #30363d;
+}
+.header-avatar {
+    margin-left: 8px;
+}
+
+
+/* Simplified Tabs */
+.repo-nav {
+    margin-top: 16px;
+    border-bottom: 1px solid #21262d;
+}
+
+.repo-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 16px; /* Spacing between tabs */
+}
+
+.repo-nav li {
+    padding: 8px 16px;
+    margin-bottom: -1px; /* Overlap border */
+    border-bottom: 2px solid transparent;
+    color: #8b949e; /* Inactive tab color */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+}
+
+.repo-nav li:hover {
+    color: #c9d1d9;
+    border-bottom-color: #30363d;
+}
+
+.repo-nav li.active {
+    color: #c9d1d9; /* Active tab text */
+    border-bottom-color: #f78166; /* Active tab underline color (GitHub uses an orange-ish) */
+    font-weight: 600;
+}
+.repo-nav li i {
+    font-size: 16px; /* Adjust icon size */
+}
+
+/* new nav bar */
+.project-nav li.active {
+    padding: 8px 32px; /* Doubled the left padding */
+    border-bottom-color: #f78166; /* Ensure active color is set */
+}
+.project-nav li a {
+    color: #8b949e; /* Style for inactive links */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px; /* Match li padding */
+    text-decoration: none;
+}
+.project-nav li a:hover {
+     color: #c9d1d9;
+ }
+
+
+/* Main Content */
+.main-content {
+    margin-top: 24px;
+}
+
+.breadcrumb {
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: #8b949e;
+}
+.breadcrumb a {
+    color: #58a6ff;
+    font-weight: 400;
+}
+
+/* ======================================== */
+/*            Original CSS                */
+/* ======================================== */
+
+/* Upload Zone */
+.upload-zone {
+    border: 1px solid #30363d; /* Changed to solid like GitHub */
+    border-radius: 6px;
+    background-color: #161b22;
+    margin-bottom: 24px;
+    /* Remove fixed padding, apply when prompt is visible */
+    position: relative; /* Needed if you absolutely position elements inside */
+    min-height: 150px; /* Give it some minimum height */
+    display: flex; /* Use flex to manage content */
+    flex-direction: column; /* Stack children vertically */
+}
+
+/* Styles for the initial prompt */
+#uploadPrompt {
+    padding: 40px 20px; /* Padding only for the prompt */
+    text-align: center;
+    flex-grow: 1; /* Allow prompt to fill space if needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#uploadPrompt i { /* Target only icon within prompt */
+    font-size: 32px;
+    color: #8b949e;
+    margin-bottom: 16px;
+    display: block;
+}
+#uploadPrompt h2 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #e6edf3;
+}
+#uploadPrompt p {
+    margin: 0;
+    color: #8b949e;
+}
+.choose-files-link { /* Style unchanged */
+    color: #58a6ff;
+    cursor: pointer;
+    font-weight: 500;
+}
+.choose-files-link:hover {
+    text-decoration: underline;
+}
+
+/* Styles for the Upload Zone WHEN it has files */
+.upload-zone.has-files {
+    /* Add padding back when files are listed */
+    padding: 10px;
+    /* Define max-height and enable scrolling */
+    max-height: 300px; /* Adjust as needed */
+    overflow-y: auto;
+    border-style: solid; /* Ensure border remains solid */
+}
+
+/* Styling the file list container */
+#fileListContainer {
+    list-style: none;
+    padding: 0;
+    margin: 0; /* Remove default ul margin */
+    width: 100%; /* Take full width */
+}
+
+/* Styling individual file list items */
+#fileListContainer li {
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #58a6ff;
+    border-bottom: 1px solid #21262d; /* Separator line */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ... for long names */
+}
+#fileListContainer li:last-child {
+    border-bottom: none; /* No border for the last item */
+}
+
+/* --- NEW Styles for File Preview Area --- */
+#filePreviewArea {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background-color: #0d1117; /* Darker background for list area */
+    margin-bottom: 24px;
+    overflow: hidden; /* Contain borders */
+}
+
+/* Current Upload Status Area */
+#currentUploadStatus {
+    padding: 12px 16px;
+    background-color: #161b22; /* Slightly lighter than list */
+    border-bottom: 1px solid #30363d;
+}
+.upload-status-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e6edf3; /* Lighter text for current file */
+    font-weight: 500;
+    margin-bottom: 8px; /* Space before progress text/bar */
+}
+.upload-progress-text {
+    display: block;
+    font-size: 12px;
+    color: #8b949e; /* Dimmer text for status */
+    margin-bottom: 8px;
+}
+#uploadProgressBar {
+    width: 100%;
+    height: 8px;
+    appearance: none; /* Remove default styling */
+    border: none;
+    border-radius: 4px;
+    overflow: hidden; /* Ensure rounded corners clip the value */
+    background-color: #21262d; /* Bar background */
+}
+/* Progress bar value */
+#uploadProgressBar::-webkit-progress-value {
+    background-color: #238636; /* GitHub green */
+    border-radius: 4px;
+    transition: width 0.3s ease; /* Smooth animation (if progress updates) */
+}
+#uploadProgressBar::-moz-progress-bar {
+    background-color: #238636;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* File List Container */
+#fileListContainer {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px; /* Make the list itself scrollable if very long */
+    overflow-y: auto;
+}
+
+/* Individual File List Items */
+#fileListContainer li {
+    display: flex;
+    align-items: center;
+    min-height: 35px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #c9d1d9;
+    border-bottom: 1px solid #21262d;
+    gap: 8px; /* Space between icon and text */
+}
+#fileListContainer li:last-child {
+    border-bottom: none;
+}
+/* File icon within the list item */
+.file-icon {
+    color: #8b949e; /* Icon color */
+    font-size: 14px;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+/* File name span to allow ellipsis */
+#fileListContainer li span {
+    flex-grow: 1; /* Allow text to take available space */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Remove File Button */
+.remove-file-btn {
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 4px;
+    margin-left: auto; /* Pushes button to the right */
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.remove-file-btn:hover {
+    color: #f9826c; /* Reddish on hover */
+}
+
+/* --- NEW STYLE for Drag Over Feedback --- */
+.upload-zone.dragover {
+    background-color: #1f242c; /* Slightly lighter background */
+    border-color: #58a6ff; /* Highlight border */
+    border-style: dashed; /* Change border style */
+}
+
+/* Status Message (in commit area) */
+.status-message {
+    margin-top: 15px;
+    font-size: 13px;
+    min-height: 1.5em;
+}
+
+
+
+/* Commit Section */
+.commit-section {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    display: flex;
+    padding: 16px;
+    gap: 16px; /* Space between avatar and form */
+    background-color: #161b22;
+}
+
+.commit-avatar {
+    width: 40px;
+    height: 40px;
+    margin-top: 4px; /* Align slightly better with first input */
+}
+
+.commit-form {
+    flex-grow: 1; /* Take remaining space */
+}
+.commit-form h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #e6edf3;
+}
+
+.commit-input,
+.commit-textarea {
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in width */
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.commit-input:focus,
+.commit-textarea:focus {
+     outline: none;
+     border-color: #58a6ff;
+     box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+}
+
+.commit-textarea {
+    min-height: 80px; /* Adjust height as needed */
+    resize: vertical;
+}
+
+.commit-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+}
+
+/* Buttons */
+.btn {
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    border-radius: 6px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.btn-primary {
+    background-color: #238636; /* GitHub green */
+    color: #ffffff;
+    border-color: rgba(240, 246, 252, 0.1);
+}
+.btn-primary:hover {
+    background-color: #2ea043;
+    border-color: rgba(240, 246, 252, 0.1);
+}
+
+.btn-secondary {
+    background-color: #21262d;
+    color: #c9d1d9;
+    border-color: rgba(240, 246, 252, 0.1);
+}
+.btn-secondary:hover {
+    background-color: #30363d;
+    border-color: #8b949e;
+}
+
+/* Status Message */
+.status-message {
+    margin-top: 15px;
+    font-size: 13px;
+    min-height: 1.5em; /* Prevent layout shift */
+}
+
+/* Simplified Footer */
+.page-footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #21262d;
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 16px;
+    font-size: 12px;
+    color: #8b949e;
+}
+.page-footer span {
+    margin-right: 8px; /* Space after copyright */
+}
+.page-footer a {
+    color: #8b949e;
+}
+.page-footer a:hover {
+    color: #58a6ff;
+    text-decoration: underline;
+}

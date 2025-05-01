@@ -1,0 +1,310 @@
+/* --- Home Page Specific Styles --- */
+
+.home-content {
+    /* Add padding if needed */
+     padding-top: 16px;
+}
+
+.home-section {
+    margin-bottom: 40px; /* Space between sections */
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e6edf3; /* Brighter text for headers */
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #21262d; /* Subtle separator */
+}
+
+.page-title {
+    font-size: 25px;
+    font-weight: 600;
+    color: #e6edf3; /* Brighter text for headers */
+    margin-bottom: 16px;
+}
+
+.page-description-text {
+    font-size: 15px;
+    font-weight: 200;
+    color: #e6edf3; /* Brighter text for headers */
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+}
+
+.editor-pick-content {
+    display: flex;
+    gap: 24px; /* Space between media and details */
+    align-items: stretch; /* Make columns equal height */
+     background-color: #161b22; /* Slightly lighter background for the content area */
+     border: 1px solid #30363d;
+     border-radius: 6px;
+     position: relative; /* For the pseudo-element divider */
+}
+
+.btn-run.small.editor {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-270%, 250%); /* Adjust for exact centering */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* White line divider */
+.editor-pick-media::before {
+    content: '';
+    position: absolute;
+    left: 47%; /* Adjust position as needed */
+    top: 20px;
+    bottom: 20px;
+    width: 2px; /* Line thickness */
+    background-color: #c9d1d9; /* Line color (white-ish) */
+     opacity: 0.5;
+}
+
+
+.editor-pick-media {
+    flex: 1 1 45%; /* Adjust flex-basis percentage */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center placeholder/button */
+    max-width: 45%; /* Ensure it doesn't grow too large */
+
+}
+
+.editor-pick-details {
+    position: absolute;
+    flex: 1 1 55%; /* Adjust flex-basis percentage */
+    right: 10px; /* Adjust as needed */
+    overflow-x: auto; /* Basically wrap the whole thing */
+    overflow-y: scroll; /* Enables vertical scrolling */
+    max-height: 280px;
+    padding-top: 5vh;
+    padding-right: 30px;
+    padding-left: 47vw; /* Space from the pseudo-element divider plus the image*/
+    color: #c9d1d9; /* Default text color for details */
+     display: flex;
+     flex-direction: column;
+}
+.editor-pick-details h3 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #e6edf3;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+.editor-pick-details p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1; /* Allow description to push meta down */
+}
+.editor-pick-details .meta-info {
+    font-size: 13px;
+    color: #8b949e; /* Dimmer color for meta */
+    display: flex;
+    gap: 16px; /* Space between author and date */
+    padding-top: 10px;
+}
+
+/* General Image Placeholder */
+.image-placeholder {
+    background-color: #0d1117; /* Darker background */
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #8b949e; /* Placeholder text color */
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.image-placeholder.large {
+    width: 100%;
+    height: 350px; /* Adjust height as needed */
+}
+
+.image-placeholder.small {
+    width: 100%;
+    height: 220px; /* Fixed height for carousel images */
+    font-size: 12px;
+     margin-bottom: 10px;
+}
+
+.image-placeholder.landscape {
+    width: 100%;
+    min-height: 180px; /* Adjust height as needed */
+}
+
+
+/* General Run Button */
+.btn-run {
+    background-color: #238636; /* GitHub green */
+    color: #ffffff;
+    border: 1px solid rgba(240, 246, 252, 0.1);
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-out;
+    text-align: center;
+}
+.btn-run:hover {
+    background-color: #2ea043;
+}
+
+.btn-run.small {
+    padding: 4px 12px;
+    font-size: 13px;
+    margin-top: auto; /* Push button to bottom of card */
+    align-self: flex-start; /* Align button left */
+    margin-left: 0; /* Override potential centering */
+}
+
+
+/* Carousel Section */
+.carousel-section {
+    position: relative; /* For potential future controls */
+}
+
+.carousel-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Keep items in a single line */
+    padding-bottom: 15px; /* Space for scrollbar */
+     margin-left: -5px; /* Compensate for item margin */
+     margin-right: -5px; /* Compensate for item margin */
+}
+
+/* Optional: Nicer scrollbar for WebKit browsers */
+.carousel-container::-webkit-scrollbar {
+    height: 8px;
+}
+.carousel-container::-webkit-scrollbar-track {
+    background: #161b22; /* Track background */
+     border-radius: 4px;
+}
+.carousel-container::-webkit-scrollbar-thumb {
+    background-color: #30363d; /* Scrollbar handle */
+    border-radius: 4px;
+    border: 2px solid #161b22; /* Creates padding around thumb */
+}
+.carousel-container::-webkit-scrollbar-thumb:hover {
+    background-color: #444c56;
+}
+
+
+.carousel-item {
+    display: inline-block; /* Allow items to sit side-by-side */
+    margin-left: 10px; /* Spacing between items */
+    margin-right: 10px;
+    width: 320px; /* Adjust width of carousel items */
+    vertical-align: top; /* Align items nicely */
+    background-color: #161b22; /* Card background */
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    box-sizing: border-box;
+    white-space: normal; /* Allow text wrapping inside the item */
+    min-height: 400px; /* Ensure consistent card height */
+     display: inline-flex; /* Use flex for internal layout */
+     flex-direction: column; /* Stack content vertically */
+}
+
+.carousel-item .description-container {
+    padding: 18px;
+}
+
+.carousel-item .item-description {
+    font-size: 13px;
+    color: #c9d1d9;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    flex-grow: 1; /* Allow description to take space */
+    /* Optional: Limit description lines */
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3; /* Show max 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(1.5em * 3); /* Ensure space for 3 lines */
+}
+
+.carousel-item .item-meta {
+    font-size: 12px;
+    color: #8b949e;
+    display: flex;
+    justify-content: space-between; /* Space out meta items */
+    margin-bottom: 10px; /* Space before button */
+}
+
+.carousel-item .info-stack {
+    font-size: 12px;
+    color: #8b949e;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- End Home Page Specific Styles --- */
+
+.small-carousel-item {
+    display: inline-block; /* Allow items to sit side-by-side */
+    margin-left: 10px; /* Spacing between items */
+    margin-right: 10px;
+    width: 280px; /* Adjust width of carousel items */
+    vertical-align: top; /* Align items nicely */
+    background-color: #161b22; /* Card background */
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    box-sizing: border-box;
+    white-space: normal; /* Allow text wrapping inside the item */
+    height: 220px; /* Ensure consistent card height */
+     display: inline-flex; /* Use flex for internal layout */
+     flex-direction: column; /* Stack content vertically */
+}
+
+button {
+    padding: 0;
+    border: none;  /* Remove border if necessary */
+    background: none; /* Remove background if needed */
+}
+
+.small-carousel-item .description-container {
+    padding: 10px;
+}
+
+.small-carousel-item .item-description {
+    font-size: 13px;
+    color: #c9d1d9;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    flex-grow: 1; /* Allow description to take space */
+    /* Optional: Limit description lines */
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3; /* Show max 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(1.5em * 3); /* Ensure space for 3 lines */
+}
+
+.small-carousel-item .item-meta {
+    font-size: 12px;
+    color: #8b949e;
+    display: flex;
+    justify-content: space-between; /* Space out meta items */
+    margin-bottom: 10px; /* Space before button */
+}
+
+.small-carousel-item .info-stack {
+    font-size: 12px;
+    color: #8b949e;
+    display: flex;
+    flex-direction: column;
+}

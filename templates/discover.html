@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../static/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<script src="../static/script.js"></script>
 <body>
     <div class="container">
         <header class="repo-header">
@@ -16,19 +15,10 @@
             <div style="width: 5px;"></div> 
             <i class="fas fa-globe"></i>
             <span class="repo-name">
-                <strong>/PyNak Home</strong>
+                <a href="{{ url_for('home') }}">PyNak Home / </a><strong>Discover</strong>
             </span>
             <div class="header-right">
-                <div class="search-box">
-                    <input type="search" placeholder="Type / to search" id="searchBar" class="search-input" onkeyup="searchFunction()" onfocus="showList()" onblur="hideList()">
-                    <ul id="itemsList">
-                        <li>Apple</li>
-                        <li>Banana</li>
-                        <li>Orange</li>
-                        <li>Grapes</li>
-                        <li>Strawberry</li>
-                    </ul>
-                </div>
+                <input type="search" placeholder="Type / to search" class="search-input">
                 <a href="{{ url_for('deploy_page') }}"><i class="fas fa-plus header-icon"></i></a>
                 <a href="{{ url_for('projects_page') }}"><i class="fas fa-inbox header-icon"></i></a>
                 <a href="{{ url_for('setting_page') }}"><i class="fas fa-cog header-icon"></i></a>
@@ -42,37 +32,16 @@
         <nav class="repo-nav project-nav"> <!-- Add class for specific styling if needed -->
             <ul>
                 <!-- Use appropriate icons -->
-                <li class="active"><i class="fa-solid fa-fire-flame-curved"></i>Popular</li> <!-- Project icon, active -->
-                <li><a href="{{ url_for('discover_page') }}"><i class="fa-brands fa-cc-discover"></i> Discover</a></li>
+                <li><a href="{{ url_for('home') }}"><i class="fa-solid fa-fire-flame-curved"></i>Popular</a></li> <!-- Project icon, active -->
+                <li class="active"><i class="fa-brands fa-cc-discover"></i>Discover</li>
             </ul>
         </nav>
 
         <!-- Main Content Area -->
         <main class="main-content">
             <section class="home-section carousel-section">
-                <h1 class="page-title">Welcome to Pynak</h1>
+                <h1 class="page-title">Discover</h1>
                 <p class="page-description-text">PyNak is an open-source platform making Pygame project discovery and sharing easy, much like Scratch. With PyNak, you can effortlessly browse community projects, collaborate by modifying code, and distribute your games – perfect for students and educators. Join the PyNak community and take your Pygame journey to the next level!</p>
-            </section>
-
-            <!-- Editor Pick Section -->
-            <section class="home-section">
-                <h2 class="section-title">Editor Pick</h2>
-                <div class="editor-pick-content">
-                    <div class="editor-pick-media">
-                        <div class="image-placeholder large">
-                            <span>[Image in this box, defaults to “No Preview”]</span>
-                        </div>
-                        <a href="{{ url_for('setting_page') }}"><button class="btn btn-run small editor">Run</button></a>
-                    </div>
-                    <div class="editor-pick-details">
-                        <h3>Project name</h3>
-                        <p>This project serves as an illustrative example, showcasing how descriptions are displayed and how text wrapping functions within the interface. A well-structured description ensures readability, particularly when handling varying lengths of content. </p>
-                        <div class="meta-info">
-                            <span>By [Author]</span>
-                            <span>[Date of Pub]</span>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             <!-- Trending Section - Carousel -->
@@ -83,12 +52,39 @@
                     <!-- Items will be added by JavaScript -->
                 </div>
             </section>
+            
+            <!-- Trending Section - Carousel -->
+            <section class="home-section carousel-section">
+                <h2 class="section-title">Platformers</h2>
+                <!-- EMPTY CONTAINER with ID -->
+                <div class="carousel-container" id="trentCarousel">
+                    <!-- Items will be added by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Trending Section - Carousel -->
+            <section class="home-section carousel-section">
+                <h2 class="section-title">Action</h2>
+                <!-- EMPTY CONTAINER with ID -->
+                <div class="carousel-container" id="smallTrendingCarouselContainer">
+                    <!-- Items will be added by JavaScript -->
+                </div>
+            </section>
 
             <!-- Recent Section - Carousel -->
             <section class="home-section carousel-section">
-                <h2 class="section-title">Recent</h2>
+                <h2 class="section-title">Story</h2>
                  <!-- EMPTY CONTAINER with ID -->
                 <div class="carousel-container" id="recentCarouselContainer">
+                    <!-- Items will be added by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Recent Section - Carousel -->
+            <section class="home-section carousel-section">
+                <h2 class="section-title">Other</h2>
+                 <!-- EMPTY CONTAINER with ID -->
+                <div class="carousel-container" id="smallRecentCarouselContainer">
                     <!-- Items will be added by JavaScript -->
                 </div>
             </section>
@@ -132,9 +128,50 @@
         // --- DOM Elements ---
         const trendingContainer = document.getElementById('trendingCarouselContainer');
         const recentContainer = document.getElementById('recentCarouselContainer');
+        const smallTrendingContainer = document.getElementById('smallTrendingCarouselContainer');
+        const smallRecentContainer = document.getElementById('smallRecentCarouselContainer');
+        const smallTTecentContainer = document.getElementById('trentCarousel');
 
         // --- Render Function for a Carousel ---
-        function renderCarousel(containerElement, dataArray) {
+        function renderSmallCarousel(containerElement, dataArray) {
+            if (!containerElement) {
+                console.error("Carousel container element not found!");
+                return;
+            }
+            containerElement.innerHTML = ''; // Clear existing content
+
+            dataArray.forEach(item => {
+                const card = document.createElement('button');
+                card.classList.add('small-carousel-item');
+
+                const runLink = item.runLink || "{{ url_for('page_not_found') }}";
+                // Optionally add a data attribute if needed later
+                // card.setAttribute('data-id', item.id);
+
+                // Use placeholder text or eventually an <img> tag if item.imageUrl exists
+                const imageHtml = `<div class="image-placeholder landscape"><span>${item.imgText || '[No Preview]'}</span></div>`;
+
+                card.innerHTML = ` 
+                    ${imageHtml}
+                    <div class="description-container">
+                        <div class="item-meta">
+                            <span>By ${item.author || 'Unknown'}</span>
+                            <span>${item.date || ''}</span>
+                        </div>
+                    </div>
+                `;
+
+                // Add an event listener to make the button do something
+                card.addEventListener('click', () => {
+                    window.location.href = runLink;  // Navigate to the link when clicked
+                });
+
+                containerElement.appendChild(card);
+            });
+        }
+
+        // --- Render Function for a Carousel ---
+        function renderMediumCarousel(containerElement, dataArray) {
             if (!containerElement) {
                 console.error("Carousel container element not found!");
                 return;
@@ -169,8 +206,11 @@
 
         // --- Initial Render on Page Load ---
         document.addEventListener('DOMContentLoaded', () => {
-            renderCarousel(trendingContainer, trendingData);
-            renderCarousel(recentContainer, recentData);
+            renderMediumCarousel(trendingContainer, trendingData);
+            renderMediumCarousel(recentContainer, recentData);
+            renderSmallCarousel(smallTrendingContainer, trendingData);
+            renderSmallCarousel(smallTTecentContainer, trendingData);
+            renderSmallCarousel(smallRecentContainer, recentData);
         });
 
     </script>
