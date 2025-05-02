@@ -1,35 +1,32 @@
-import requests
-from dotenv import load_dotenv
 import os
+import requests
 
-load_dotenv()
-# Replace with your GitHub username and personal access token
 username = os.getenv('GIT_USER')
-token = os.getenv('GIT_TOKEN')  # Expired, make new one here: https://github.com/settings/tokens
-
-# GitHub API URL to get user repositories
+token = os.getenv('GIT_TOKEN')
 api_url = f'https://api.github.com/users/{username}/repos'
 
-# Fetch all repositories
-response = requests.get(api_url, auth=(username, token))
+if not username or not token:
+    raise EnvironmentError("GIT_USER and GIT_TOKEN must be set in the environment variables.")
 
-if response.status_code == 200:
-    repos = response.json()
+headers = {
+    'Authorization': f'token {token}',
+    'Accept': 'application/vnd.github.v3+json'
+}
 
-    # Filter repositories with 'upload-folder-' in the name
-    repos_to_delete = [repo['name'] for repo in repos if 'uploaded_folder' in repo['name']]
+# Step 1: Get all repositories
+response = requests.get(api_url, headers=headers)
+if response.status_code != 200:
+    raise Exception(f"Failed to fetch repos: {response.status_code} {response.text}")
 
-    if not repos_to_delete:
-        print("No repositories with 'upload-folder-' found.")
-    else:
-        # Delete each repository
-        for repo in repos_to_delete:
-            repo_url = f'https://api.github.com/repos/{username}/{repo}'
-            delete_response = requests.delete(repo_url, auth=(username, token))
+repos = response.json()
 
-            if delete_response.status_code == 204:
-                print(f"Repository '{repo}' deleted successfully.")
-            else:
-                print(f"Failed to delete repository '{repo}': {delete_response.status_code} - {delete_response.text}")
-else:
-    print(f"Error fetching repositories: {response.status_code} - {response.text}")
+# Step 2: Filter and delete matching repos
+for repo in repos:
+    repo_name = repo['name']
+    if "upload-folder" in repo_name:
+        delete_url = f"https://api.github.com/repos/{username}/{repo_name}"
+        del_response = requests.delete(delete_url, headers=headers)
+        if del_response.status_code == 204:
+            print(f"Deleted repository: {repo_name}")
+        else:
+            print(f"Failed to delete {repo_name}: {del_response.status_code} {del_response.text}")
